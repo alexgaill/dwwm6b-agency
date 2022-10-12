@@ -12,7 +12,7 @@
         {% for property in properties %}
             <article class="card text-dark m-3" style="width:13rem;">
                 {% if property.picture %}
-                    <img src="{{ asset('/assets/img/property/' ~ property.picture) }}" alt="{{ property.title }}" width="300px" class="card-img-top">
+                    <img src="{{ asset('/assets/img/properties/' ~ property.picture) }}" alt="{{ property.title }}" width="300px" class="card-img-top">
                 {% else %}
                     <img src="https://fakeimg.pl/300x150" alt="" class="card-img-top">
                 {% endif %}
@@ -22,7 +22,7 @@
                     <p class="card-text">surface: {{ property.size }}</p>
                     <p class="card-text h4 bg-info">{{ property.transactionType }} | {{ property.propertyType }}</p>
                     <p class="card-text">Prix:{{ property.price| number_format(0, ',', ' ') }} €</p>
-                    <a href="#" class="btn btn-info">Voir le bien</a>
+                    <a href="{{ path('show_property', {id: property.id}) }}" class="btn btn-info">Voir le bien</a>
                 </div>
             </article>
         {% else %}

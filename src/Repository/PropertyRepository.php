@@ -43,19 +43,24 @@ class PropertyRepository extends ServiceEntityRepository
     * @param array $filter Ensemble des filtres de recherche de propriétés
     * @return Property[] Returns an array of Property objects
     */
-   public function filter(array $filter): array
+   public function filter(?string $minSize, ?string $maxSize, ?string $minRooms, ?string $maxRooms, ?string $minPrice, ?string $maxPrice, ?bool $transactionType, ?int $propertyType): array
    {
+       dump($transactionType);
         $qb = $this->createQueryBuilder('p');
         
-        $filter['minSize'] ? $qb->andWhere("p.size >= ". $filter['minSize']): null;
-        $filter['maxSize'] ? $qb->andWhere("p.size <= ". $filter['maxSize']): null;
-        $filter['minRooms'] ? $qb->andWhere("p.rooms >= ". $filter['minRooms']): null;
-        $filter['maxRooms'] ? $qb->andWhere("p.rooms <= ". $filter['maxRooms']): null;
-        $filter['minPrice'] ? $qb->andWhere("p.price >= ". $filter['minPrice']): null;
-        $filter['maxPrice'] ? $qb->andWhere("p.price <= ". $filter['maxPrice']): null;
-        $filter['transactionType'] ? $qb->andWhere("p.transactionType = " . $filter['transactionType']): null;
-        $filter['propertyType'] ? $qb->andWhere("p.propertyType = " . $filter['propertyType']): null;
-        
+        $minSize ? $qb->andWhere("p.size >= ". $minSize): null;
+        $maxSize ? $qb->andWhere("p.size <= ". $maxSize): null;
+        $minRooms ? $qb->andWhere("p.rooms >= ". $minRooms): null;
+        $maxRooms ? $qb->andWhere("p.rooms <= ". $maxRooms): null;
+        $minPrice ? $qb->andWhere("p.price >= ". $minPrice): null;
+        $maxPrice ? $qb->andWhere("p.price <= ". $maxPrice): null;
+        // if (!empty($filter['transactionType'])) {
+        is_bool($transactionType) ? $qb->andWhere("p.transactionType = " . intval($transactionType)): null;
+        // }
+        // if (!empty($filter['propertyType'])) {
+        is_int($propertyType) ? $qb->andWhere("p.propertyType = ". $propertyType): null;
+        // }
+        dump($qb->getQuery());
         return $qb->getQuery()
         ->getResult();
    }

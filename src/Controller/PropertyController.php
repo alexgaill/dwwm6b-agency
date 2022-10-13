@@ -41,7 +41,18 @@ class PropertyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $properties = $this->repository->filter($request->get('filter'));
+            $filters = $request->get('filter');
+            dump($filters['transactionType']);
+            $properties = $this->repository->filter(
+                minSize: $filters['minSize'],
+                maxSize: $filters['maxSize'],
+                minRooms: $filters['minRooms'],
+                maxRooms: $filters['maxRooms'],
+                minPrice: $filters['minPrice'],
+                maxPrice: $filters['maxPrice'],
+                transactionType: $filters['transactionType'] >= 0 ? boolval($filters['transactionType']): null,
+                propertyType: $filters['propertyType'] >= 0 ? intval($filters['propertyType']): null
+            );
         } else {
             $properties = $this->repository->findBy(['available' => true]);
         }

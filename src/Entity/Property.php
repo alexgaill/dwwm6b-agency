@@ -117,6 +117,14 @@ class Property
         return $this;
     }
 
+    public function getTransactionType(): ?string
+    {
+        if ($this->transactionType) {
+            return "Vente";
+        }
+        return "Location";
+    }
+    
     public function isTransactionType(): ?string
     {
         if ($this->transactionType) {

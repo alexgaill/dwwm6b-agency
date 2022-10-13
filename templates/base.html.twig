@@ -28,11 +28,14 @@
 						</li>
 						{% if is_granted("ROLE_USER") %}
 							<li class="nav-item nav-item-light">
-								<a href="#" class="nav-link nav-link-light">Deconnexion</a>
+								<a href="{{ path('admin') }}" class="nav-link nav-link-light">Administration</a>
+							</li>
+							<li class="nav-item nav-item-light">
+								<a href="{{ path('app_logout') }}" class="nav-link nav-link-light">Deconnexion</a>
 							</li>
 						{% else %}
 							<li class="nav-item nav-item-light">
-								<a href="#" class="nav-link nav-link-light">Connexion</a>
+								<a href="{{ path('app_login') }}" class="nav-link nav-link-light">Connexion</a>
 							</li>
 						{% endif %}
 					</ul>

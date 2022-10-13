@@ -39,20 +39,26 @@ class PropertyRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Property[] Returns an array of Property objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @param array $filter Ensemble des filtres de recherche de propriétés
+    * @return Property[] Returns an array of Property objects
+    */
+   public function filter(array $filter): array
+   {
+        $qb = $this->createQueryBuilder('p');
+        
+        $filter['minSize'] ? $qb->andWhere("p.size >= ". $filter['minSize']): null;
+        $filter['maxSize'] ? $qb->andWhere("p.size <= ". $filter['maxSize']): null;
+        $filter['minRooms'] ? $qb->andWhere("p.rooms >= ". $filter['minRooms']): null;
+        $filter['maxRooms'] ? $qb->andWhere("p.rooms <= ". $filter['maxRooms']): null;
+        $filter['minPrice'] ? $qb->andWhere("p.price >= ". $filter['minPrice']): null;
+        $filter['maxPrice'] ? $qb->andWhere("p.price <= ". $filter['maxPrice']): null;
+        $filter['transactionType'] ? $qb->andWhere("p.transactionType = " . $filter['transactionType']): null;
+        $filter['propertyType'] ? $qb->andWhere("p.propertyType = " . $filter['propertyType']): null;
+        
+        return $qb->getQuery()
+        ->getResult();
+   }
 
 //    public function findOneBySomeField($value): ?Property
 //    {

@@ -2,16 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Appointment;
 use App\Entity\Property;
+use App\Entity\Appointment;
 use App\Form\AppointementType;
+use App\Form\FilterType;
 use App\Repository\PropertyRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 class PropertyController extends AbstractController
 {
@@ -25,10 +27,34 @@ class PropertyController extends AbstractController
     }
 
     #[Route('/', name: 'app_home', methods:["GET"])]
-    public function index(): Response
+    public function home(): Response
     {
-        return $this->render('property/index.html.twig', [
+        return $this->render('property/home.html.twig', [
             'properties' => $this->repository->findBy(['available' => true], ['id' => "DESC"], 5)
+        ]);
+    }
+
+    #[Route('/properties', name:"app_property", methods:["GET", "POST"])]
+    public function index(PaginatorInterface $paginator, Request $request): Response
+    {
+        $form = $this->createForm(FilterType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $properties = $this->repository->filter($request->get('filter'));
+        } else {
+            $properties = $this->repository->findBy(['available' => true]);
+        }
+
+        $pagination = $paginator->paginate(
+            $properties,
+            $request->query->getInt('page', 1),
+            8
+        );
+
+        return $this->renderForm('property/index.html.twig', [
+            'pagination' => $pagination,
+            'filterForm' => $form
         ]);
     }
 

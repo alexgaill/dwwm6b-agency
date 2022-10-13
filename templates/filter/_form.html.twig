@@ -1,0 +1,17 @@
+{{ form_start(filterForm) }}
+<div class="d-flex justify-content-evenly">
+	<div class="col-1">{{form_row(filterForm.minSize)}}</div>
+	<div class="col-1">{{form_row(filterForm.maxSize)}}</div>
+	<div class="col-1">{{form_row(filterForm.minRooms)}}</div>
+	<div class="col-1">{{form_row(filterForm.maxRooms)}}</div>
+	<div class="col-1">{{form_row(filterForm.minPrice)}}</div>
+	<div class="col-1">{{form_row(filterForm.maxPrice)}}</div>
+	<div class="col-1">{{form_row(filterForm.transactionType)}}</div>
+	<div class="col-1">{{form_row(filterForm.propertyType)}}</div>
+</div>
+<div class="row">
+    <div class="col-3 mx-auto">
+        {{ form_row(filterForm.submit) }}
+    </div>
+</div>
+{{ form_end(filterForm) }}

@@ -1,32 +1,57 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
 {% block body %}
-    <section id="header" class="row my-5">
-		<img src="{{ asset("/assets/img/agence.jpg") }}" alt="Photo de devanture de l'agence" class="col-6">
-		<div class="col-6">
-			<h2>Bienvenue sur le site de notre agence</h2>
-			<h3>Retrouvez tous les biens près de chez vous au meilleur prix</h3>
+	<section id="header">
+		<h2 class="my-3">Retrouvez nos bien disponibles ici</h2>
+		{% include "filter/_form.html.twig" %}
+		<div>
+			<hr>
+			<p class="h5">Nombre de biens disponibles:
+				<span class="text-success">{{ pagination.getTotalItemCount }}</span>
+			</p>
+			<table class="table">
+				<tr>
+					<th {% if pagination.isSorted('rooms') %} class="text-secondary" {% endif %}>
+						{{ knp_pagination_sortable(pagination, 'Pièces', 'rooms') }}
+					</th>
+					<th {% if pagination.isSorted('size') %} class="text-secondary" {% endif %}>
+						{{ knp_pagination_sortable(pagination, 'Surface', 'size') }}
+					</th>
+					<th {% if pagination.isSorted('price') %} class="text-secondary" {% endif %}>
+						{{ knp_pagination_sortable(pagination, 'Prix', 'price') }}
+					</th>
+				</tr>
+			</table>
+			<hr>
 		</div>
 	</section>
-    <section id="content" class="d-flex justify-content-around flex-wrap">
-        {% for property in properties %}
-            <article class="card text-dark m-3" style="width:13rem;">
-                {% if property.picture %}
-                    <img src="{{ asset('/assets/img/properties/' ~ property.picture) }}" alt="{{ property.title }}" width="300px" class="card-img-top">
-                {% else %}
-                    <img src="https://fakeimg.pl/300x150" alt="" class="card-img-top">
-                {% endif %}
-                <div class="card-body">
-                    <h4 class="card-title">{{ property.title }}</h4>
-                    <p class="card-text">nb de pièces: {{ property.rooms }}</p>
-                    <p class="card-text">surface: {{ property.size }}</p>
-                    <p class="card-text h4 bg-info">{{ property.transactionType }} | {{ property.propertyType }}</p>
-                    <p class="card-text">Prix:{{ property.price| number_format(0, ',', ' ') }} €</p>
-                    <a href="{{ path('show_property', {id: property.id}) }}" class="btn btn-info">Voir le bien</a>
-                </div>
-            </article>
-        {% else %}
-            <h2>Tous nos biens ont été vendus ou loués, n'hésitez pas à revenir régulièrement pour consulter les nouveaux biens</h2>
-        {% endfor %}
-    </section>
+	<section id="content" class="d-flex justify-content-start flex-wrap">
+		{% for property in pagination %}
+			<article class="card text-dark m-3" style="width: 18rem;">
+				{% if property.picture %}
+					<img src="{{ asset('/assets/img/properties/' ~ property.picture) }}" alt="{{ property.title }}" width="300px" class="card-img-top">
+				{% else %}
+					<img src="https://fakeimg.pl/300x150" alt="" class="card-img-top">
+				{% endif %}
+				<div class="card-body">
+					<h4 class="card-title">{{ property.title }}</h4>
+					<p class="card-text">nb de pièces:
+						{{ property.rooms }}</p>
+					<p class="card-text">surface:
+						{{ property.size }}</p>
+					<p class="card-text h4 bg-info">{{ property.transactionType }}
+						|
+						{{ property.propertyType }}</p>
+					<p class="card-text">Prix:{{ property.price| number_format(0, ',', ' ') }}
+						€</p>
+					<a href="{{ path('show_property', {id: property.id}) }}" class="btn btn-info">Voir le bien</a>
+				</div>
+			</article>
+		{% else %}
+			<p class="h4 text-info">Aucun bien n'est disponible pour le moment.</p>
+		{% endfor %}
+	</section>
+	<div class="navigation mx-auto" style="width:max-content;">
+		{{ knp_pagination_render(pagination) }}
+	</div>
 {% endblock %}

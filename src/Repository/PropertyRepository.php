@@ -45,7 +45,7 @@ class PropertyRepository extends ServiceEntityRepository
     */
    public function filter(?string $minSize, ?string $maxSize, ?string $minRooms, ?string $maxRooms, ?string $minPrice, ?string $maxPrice, ?bool $transactionType, ?int $propertyType): array
    {
-       dump($transactionType);
+
         $qb = $this->createQueryBuilder('p');
         
         $minSize ? $qb->andWhere("p.size >= ". $minSize): null;
@@ -54,13 +54,9 @@ class PropertyRepository extends ServiceEntityRepository
         $maxRooms ? $qb->andWhere("p.rooms <= ". $maxRooms): null;
         $minPrice ? $qb->andWhere("p.price >= ". $minPrice): null;
         $maxPrice ? $qb->andWhere("p.price <= ". $maxPrice): null;
-        // if (!empty($filter['transactionType'])) {
         is_bool($transactionType) ? $qb->andWhere("p.transactionType = " . intval($transactionType)): null;
-        // }
-        // if (!empty($filter['propertyType'])) {
         is_int($propertyType) ? $qb->andWhere("p.propertyType = ". $propertyType): null;
-        // }
-        dump($qb->getQuery());
+
         return $qb->getQuery()
         ->getResult();
    }

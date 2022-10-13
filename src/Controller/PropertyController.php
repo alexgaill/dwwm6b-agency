@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class PropertyController extends AbstractController
 {
@@ -27,8 +28,18 @@ class PropertyController extends AbstractController
     }
 
     #[Route('/', name: 'app_home', methods:["GET"])]
-    public function home(): Response
+    public function home(RequestStack $requestStack): Response
     {
+        $session = $requestStack->getSession();
+        $session->clear();
+        $session->set('panier', [
+            [
+                "name" => "pomme",
+                "quantité" => 3,
+                "prixTotal" => 3
+            ]
+            ]);
+        dump($session->get('panier'));
         return $this->render('property/home.html.twig', [
             'properties' => $this->repository->findBy(['available' => true], ['id' => "DESC"], 5)
         ]);
